@@ -5,18 +5,22 @@ import (
 	"fmt"
 	"github.com/streadway/amqp"
 	"log"
+	"time"
 )
 func failOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s: %s", msg, err)
 	}
 }
-// The following code subscribes to rabbitMQ and waits for messages (ish)
+
+// The following code subscribes to rabbitMQ and waits for messages
 func main() {
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 
 	if err != nil {
-		fmt.Println("Failed to connect to RabbitMQ")
+		fmt.Println("Failed to connect to RabbitMQ, retrying in 5 seconds..")
+		time.Sleep(5 * time.Second)
+		main()
 	}
 
 
